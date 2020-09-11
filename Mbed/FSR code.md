@@ -1,4 +1,4 @@
-'''cpp
+~~~cpp
 #include "mbed.h"
 #include "Map.hpp"
 
@@ -38,4 +38,4 @@ int main(void)
        wait(0.05);
     }
 }
-'''
+~~~
