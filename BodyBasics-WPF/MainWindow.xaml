@@ -1,0 +1,61 @@
+﻿<Window x:Class="Microsoft.Samples.Kinect.BodyBasics.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Body Basics" 
+        Height="750" Width="820" 
+        Loaded="MainWindow_Loaded" 
+        KeyDown= "onKeyDown"
+        Closing="MainWindow_Closing" UseLayoutRounding="False" MaxWidth="820" MaxHeight="750" MinWidth="700" MinHeight="730">
+    <Window.Resources>
+        <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
+        <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f" />
+        <SolidColorBrush x:Key="KinectBlueBrush" Color="#ff00BCF2" />
+    </Window.Resources>
+    <Grid Margin="10,0,0,-0.2" HorizontalAlignment="Left" Width="800">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="150" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0" Source="Images\Logo.png" HorizontalAlignment="Left" Stretch="Fill" Height="32" Width="81" Margin="0 10 0 5" />
+        <TextBlock Grid.Row="0" Margin="0 0 10 0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="18">Body Basics</TextBlock>
+        <Image Grid.Row="0" Source="Images\Status.png" Stretch="None" HorizontalAlignment="Center" Margin="0 0 0 5" />
+
+        <Viewbox Grid.Row="1" HorizontalAlignment="Left">
+            <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
+        </Viewbox>
+
+        <StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
+            <StatusBarItem Content="{Binding StatusText}" />
+        </StatusBar>
+        <Label x:Name="label" Content="포트" HorizontalAlignment="Left" Margin="-5,9.6,0,0" Grid.Row="2" VerticalAlignment="Top" RenderTransformOrigin="1.135,0.104"/>
+        <Label x:Name="label_Copy" Content="BAUD" HorizontalAlignment="Left" Margin="-5,39.6,0,0" Grid.Row="2" VerticalAlignment="Top" RenderTransformOrigin="1.135,0.104"/>
+        <ComboBox x:Name="comboBox_portName" HorizontalAlignment="Left" Margin="40,12.6,0,0" Grid.Row="2" VerticalAlignment="Top" Width="120" DropDownOpened="ComboBox_portName_DropDownOpened"/>
+        <ComboBox x:Name="comboBox_Baudrate" HorizontalAlignment="Left" Margin="40,42.6,0,0" Grid.Row="2" VerticalAlignment="Top" Width="120" SelectedIndex="4">
+            <ComboBoxItem Content="9600" HorizontalAlignment="Left" Width="118.4"/>
+            <ComboBoxItem Content="19200" HorizontalAlignment="Left" Width="118.4"/>
+            <ComboBoxItem Content="38400" HorizontalAlignment="Left" Width="118.4"/>
+            <ComboBoxItem Content="57600" HorizontalAlignment="Left" Width="118.4"/>
+            <ComboBoxItem Content="115200" HorizontalAlignment="Left" Width="118.4"/>
+        </ComboBox>
+        <ListBox x:Name="listBox_recvdata" HorizontalAlignment="Left" Height="108" Width="445" Margin="165,12.6,0,0" Grid.Row="2" VerticalAlignment="Top" ScrollViewer.CanContentScroll="True" />
+        <Label x:Name="Ip" Content="IP주소" HorizontalAlignment="Left" Margin="-5,66,0,0" Grid.Row="2" VerticalAlignment="Top" RenderTransformOrigin="1.135,0.104"/>
+        <TextBox x:Name = "ipInput" Grid.Row="2" Margin="40,70,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="button_connect" Content="연결" HorizontalAlignment="Left" Margin="1,93,0,0" Grid.Row="2" VerticalAlignment="Top" Width="158" Height="28" Click="Button_connect_Click"/>
+        <Label x:Name="fsrInput" Content="FSR Input" Margin="0,0,5,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column = "1" Grid.Row="0"  RenderTransformOrigin="1.135,0.104"/>
+        <Label x:Name = "bodypos_print" Content="6" Grid.Column ="1" Grid.Row="0" Margin="167,0,0,12" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="18" Height="26"/>
+        <ListBox x:Name="fsr_recvdata" Margin ="1.4,54,9,0.2" Grid.Column = "1"   Grid.RowSpan="2"/>
+        <Label x:Name="level1" Content="boundary" HorizontalAlignment="Left" Margin="0.4,17.8,0,0" Grid.Column= "1" Grid.Row="2" VerticalAlignment="Top" RenderTransformOrigin="1.135,0.104" Height="29" Width="62"/>
+
+        <TextBox x:Name = "preinput_1" Grid.Column="1"  Grid.Row="2" Margin="62.4,22.8,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="117"/>
+
+
+        <Button x:Name="button_change" Content="변환" HorizontalAlignment="Left" Margin="6.4,92.8,0,0" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" Width="175" Height="28" Click="button_change_Click" />
+    </Grid>
+</Window>
