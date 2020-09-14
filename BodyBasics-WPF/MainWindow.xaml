@@ -46,16 +46,10 @@
         </ComboBox>
         <ListBox x:Name="listBox_recvdata" HorizontalAlignment="Left" Height="108" Width="445" Margin="165,12.6,0,0" Grid.Row="2" VerticalAlignment="Top" ScrollViewer.CanContentScroll="True" />
         <Label x:Name="Ip" Content="IP주소" HorizontalAlignment="Left" Margin="-5,66,0,0" Grid.Row="2" VerticalAlignment="Top" RenderTransformOrigin="1.135,0.104"/>
-        <TextBox x:Name = "ipInput" Grid.Row="2" Margin="40,70,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name = "ipInput" Grid.Row="2" Margin="40,70,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Text="192.168.0.18"/>
         <Button x:Name="button_connect" Content="연결" HorizontalAlignment="Left" Margin="1,93,0,0" Grid.Row="2" VerticalAlignment="Top" Width="158" Height="28" Click="Button_connect_Click"/>
         <Label x:Name="fsrInput" Content="FSR Input" Margin="0,0,5,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column = "1" Grid.Row="0"  RenderTransformOrigin="1.135,0.104"/>
         <Label x:Name = "bodypos_print" Content="6" Grid.Column ="1" Grid.Row="0" Margin="167,0,0,12" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="18" Height="26"/>
         <ListBox x:Name="fsr_recvdata" Margin ="1.4,54,9,0.2" Grid.Column = "1"   Grid.RowSpan="2"/>
-        <Label x:Name="level1" Content="boundary" HorizontalAlignment="Left" Margin="0.4,17.8,0,0" Grid.Column= "1" Grid.Row="2" VerticalAlignment="Top" RenderTransformOrigin="1.135,0.104" Height="29" Width="62"/>
-
-        <TextBox x:Name = "preinput_1" Grid.Column="1"  Grid.Row="2" Margin="62.4,22.8,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="117"/>
-
-
-        <Button x:Name="button_change" Content="변환" HorizontalAlignment="Left" Margin="6.4,92.8,0,0" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" Width="175" Height="28" Click="button_change_Click" />
     </Grid>
 </Window>

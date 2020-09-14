@@ -4,8 +4,7 @@
 //     Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
-namespace Microsoft.Samples.Kinect.BodyBasics
-{
+namespace Microsoft.Samples.Kinect.BodyBasics {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -24,8 +23,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     /// <summary>
     /// Interaction logic for MainWindow
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
-    {
+    public partial class MainWindow : Window, INotifyPropertyChanged {
         Thread t1;
         SerialPort my_serial;
         Dictionary<JointType, Point> jointPoints;
@@ -36,7 +34,6 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         byte[] dgram;
         string ip, msg;
         int bodyPos;
-        int border1, border2;
         delegate void SetTextCallBack(string opt);
         /// <summary>
         /// Radius of drawn hand circles
@@ -146,8 +143,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
-        public MainWindow()
-        {
+        public MainWindow() {
             Debug.WriteLine("MainWindow()");
 
             t1 = new Thread(new ThreadStart(Run));
@@ -157,9 +153,6 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             cli = new UdpClient();
             // 현재 body 지정을 위한 변수 초기화
             bodyPos = 6;
-            // 입력받은 센서 초기값 저장을 위한 변수
-            border1 = 0;
-            border2 = 0;
             msg = "";
             // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
@@ -255,10 +248,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <summary>
         /// Gets the bitmap to display
         /// </summary>
-        public ImageSource ImageSource
-        {
-            get
-            {
+        public ImageSource ImageSource {
+            get {
                 return this.imageSource;
             }
         }
@@ -266,21 +257,16 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <summary>
         /// Gets or sets the current status text to display
         /// </summary>
-        public string StatusText
-        {
-            get
-            {
+        public string StatusText {
+            get {
                 return this.statusText;
             }
-            set
-            {
-                if (this.statusText != value)
-                {
+            set {
+                if (this.statusText != value) {
                     this.statusText = value;
 
                     // notify any bound elements that the text has changed
-                    if (this.PropertyChanged != null)
-                    {
+                    if (this.PropertyChanged != null) {
                         this.PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
                     }
                 }
@@ -292,11 +278,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
             Debug.WriteLine("MainWindow_Loaded()");
-            if (this.bodyFrameReader != null)
-            {
+            if (this.bodyFrameReader != null) {
                 this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
             }
         }
@@ -306,18 +290,15 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        private void MainWindow_Closing(object sender, CancelEventArgs e)
-        {
+        private void MainWindow_Closing(object sender, CancelEventArgs e) {
             Debug.WriteLine("MainWindow_Closing()");
-            if (this.bodyFrameReader != null)
-            {
+            if (this.bodyFrameReader != null) {
                 // BodyFrameReader is IDisposable
                 this.bodyFrameReader.Dispose();
                 this.bodyFrameReader = null;
             }
 
-            if (this.kinectSensor != null)
-            {
+            if (this.kinectSensor != null) {
                 this.kinectSensor.Close();
                 this.kinectSensor = null;
             }
@@ -328,16 +309,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        private void Reader_FrameArrived(object sender, BodyFrameArrivedEventArgs e)
-        {
+        private void Reader_FrameArrived(object sender, BodyFrameArrivedEventArgs e) {
             bool dataReceived = false;
 
-            using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
-            {
-                if (bodyFrame != null)
-                {
-                    if (this.bodies == null)
-                    {
+            using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame()) {
+                if (bodyFrame != null) {
+                    if (this.bodies == null) {
                         this.bodies = new Body[bodyFrame.BodyCount];
                     }
                     // The first time GetAndRefreshBodyData is called, Kinect will allocate each Body in the array.
@@ -348,25 +325,21 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 }
             }
 
-            if (dataReceived)
-            {
-                using (DrawingContext dc = this.drawingGroup.Open())
-                {
+            if (dataReceived) {
+                using (DrawingContext dc = this.drawingGroup.Open()) {
                     // Draw a transparent background to set the render size
                     dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
 
                     int penIndex = 0;
                     // foreach (Body body in this.bodies) {
-                    for (int i = 0; i < 6; ++i)
-                    {
+                    for (int i = 0; i < 6; ++i) {
                         if (bodyPos != 6 && i != bodyPos) continue;
 
                         Body body = this.bodies[i];
 
                         Pen drawPen = this.bodyColors[penIndex++];
 
-                        if (body.IsTracked)
-                        {
+                        if (body.IsTracked) {
                             this.DrawClippedEdges(body, dc);
 
                             IReadOnlyDictionary<JointType, Joint> joints = body.Joints;
@@ -374,13 +347,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                             // convert the joint points to depth (display) space
                             jointPoints = new Dictionary<JointType, Point>();
 
-                            foreach (JointType jointType in joints.Keys)
-                            {
+                            foreach (JointType jointType in joints.Keys) {
                                 // sometimes the depth(Z) of an inferred joint may show as negative
                                 // clamp down to 0.1f to prevent coordinatemapper from returning (-Infinity, -Infinity)
                                 CameraSpacePoint position = joints[jointType].Position;
-                                if (position.Z < 0)
-                                {
+                                if (position.Z < 0) {
                                     position.Z = InferredZPositionClamp;
                                 }
 
@@ -422,32 +393,26 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <param name="jointPoints">translated positions of joints to draw</param>
         /// <param name="drawingContext">drawing context to draw to</param>
         /// <param name="drawingPen">specifies color to draw a specific body</param>
-        private void DrawBody(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, DrawingContext drawingContext, Pen drawingPen)
-        {
+        private void DrawBody(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, DrawingContext drawingContext, Pen drawingPen) {
             // Draw the bones
-            foreach (var bone in this.bones)
-            {
+            foreach (var bone in this.bones) {
                 this.DrawBone(joints, jointPoints, bone.Item1, bone.Item2, drawingContext, drawingPen);
             }
 
             // Draw the joints
-            foreach (JointType jointType in joints.Keys)
-            {
+            foreach (JointType jointType in joints.Keys) {
                 Brush drawBrush = null;
 
                 TrackingState trackingState = joints[jointType].TrackingState;
 
-                if (trackingState == TrackingState.Tracked)
-                {
+                if (trackingState == TrackingState.Tracked) {
                     drawBrush = this.trackedJointBrush;
                 }
-                else if (trackingState == TrackingState.Inferred)
-                {
+                else if (trackingState == TrackingState.Inferred) {
                     drawBrush = this.inferredJointBrush;
                 }
 
-                if (drawBrush != null)
-                {
+                if (drawBrush != null) {
                     drawingContext.DrawEllipse(drawBrush, null, jointPoints[jointType], JointThickness, JointThickness);
                 }
             }
@@ -462,22 +427,19 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <param name="jointType1">second joint of bone to draw</param>
         /// <param name="drawingContext">drawing context to draw to</param>
         /// /// <param name="drawingPen">specifies color to draw a specific bone</param>
-        private void DrawBone(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, JointType jointType0, JointType jointType1, DrawingContext drawingContext, Pen drawingPen)
-        {
+        private void DrawBone(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, JointType jointType0, JointType jointType1, DrawingContext drawingContext, Pen drawingPen) {
             Joint joint0 = joints[jointType0];
             Joint joint1 = joints[jointType1];
 
             // If we can't find either of these joints, exit
             if (joint0.TrackingState == TrackingState.NotTracked ||
-                joint1.TrackingState == TrackingState.NotTracked)
-            {
+                joint1.TrackingState == TrackingState.NotTracked) {
                 return;
             }
 
             // We assume all drawn bones are inferred unless BOTH joints are tracked
             Pen drawPen = this.inferredBonePen;
-            if ((joint0.TrackingState == TrackingState.Tracked) && (joint1.TrackingState == TrackingState.Tracked))
-            {
+            if ((joint0.TrackingState == TrackingState.Tracked) && (joint1.TrackingState == TrackingState.Tracked)) {
                 drawPen = drawingPen;
             }
 
@@ -490,10 +452,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <param name="handState">state of the hand</param>
         /// <param name="handPosition">position of the hand</param>
         /// <param name="drawingContext">drawing context to draw to</param>
-        private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext)
-        {
-            switch (handState)
-            {
+        private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext) {
+            switch (handState) {
                 case HandState.Closed:
                     drawingContext.DrawEllipse(this.handClosedBrush, null, handPosition, HandSize, HandSize);
                     break;
@@ -513,36 +473,31 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// </summary>
         /// <param name="body">body to draw clipping information for</param>
         /// <param name="drawingContext">drawing context to draw to</param>
-        private void DrawClippedEdges(Body body, DrawingContext drawingContext)
-        {
+        private void DrawClippedEdges(Body body, DrawingContext drawingContext) {
             FrameEdges clippedEdges = body.ClippedEdges;
 
-            if (clippedEdges.HasFlag(FrameEdges.Bottom))
-            {
+            if (clippedEdges.HasFlag(FrameEdges.Bottom)) {
                 drawingContext.DrawRectangle(
                     Brushes.Red,
                     null,
                     new Rect(0, this.displayHeight - ClipBoundsThickness, this.displayWidth, ClipBoundsThickness));
             }
 
-            if (clippedEdges.HasFlag(FrameEdges.Top))
-            {
+            if (clippedEdges.HasFlag(FrameEdges.Top)) {
                 drawingContext.DrawRectangle(
                     Brushes.Red,
                     null,
                     new Rect(0, 0, this.displayWidth, ClipBoundsThickness));
             }
 
-            if (clippedEdges.HasFlag(FrameEdges.Left))
-            {
+            if (clippedEdges.HasFlag(FrameEdges.Left)) {
                 drawingContext.DrawRectangle(
                     Brushes.Red,
                     null,
                     new Rect(0, 0, ClipBoundsThickness, this.displayHeight));
             }
 
-            if (clippedEdges.HasFlag(FrameEdges.Right))
-            {
+            if (clippedEdges.HasFlag(FrameEdges.Right)) {
                 drawingContext.DrawRectangle(
                     Brushes.Red,
                     null,
@@ -555,34 +510,28 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
-        {
+        private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e) {
             // on failure, set the status text
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.SensorNotAvailableStatusText;
         }
 
-        private void ComboBox_portName_DropDownOpened(object sender, EventArgs e)
-        {
+        private void ComboBox_portName_DropDownOpened(object sender, EventArgs e) {
             comboBox_portName.Items.Clear();
-            foreach (string comport in SerialPort.GetPortNames())
-            {
+            foreach (string comport in SerialPort.GetPortNames()) {
                 comboBox_portName.Items.Insert(0, comport);
             }
         }
 
-        private void Button_connect_Click(object sender, RoutedEventArgs e)
-        {
+        private void Button_connect_Click(object sender, RoutedEventArgs e) {
             string comport_str = "";
             ip = "";
 
-            if (!my_serial.IsOpen)
-            {
+            if (!my_serial.IsOpen) {
                 comport_str = comboBox_portName.Text;
                 ip = ipInput.Text;
 
-                if (comport_str == "" || ip == "")
-                {
+                if (comport_str == "" || ip == "") {
                     string tmp = "값을 모두 입력하세요";
                     listBox_recvdata.Items.Insert(0, tmp);
                     return;
@@ -591,21 +540,18 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 my_serial.PortName = comboBox_portName.Text;
                 my_serial.BaudRate = Int32.Parse(comboBox_Baudrate.Text);
 
-                try
-                {
+                try {
                     my_serial.Open();
                     comport_str += " " + " is open";
                     button_connect.Content = "해제";
                     listBox_recvdata.Items.Insert(0, comport_str);
                     t1.Start();
                 }
-                catch
-                {
+                catch {
                     listBox_recvdata.Items.Insert(0, "Serial Port Connection Fail");
                 }
             }
-            else
-            {
+            else {
                 button_connect.Content = "연결";
                 my_serial.Close();
                 t1.Abort();
@@ -622,32 +568,32 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         }
 
-        public void Run()
-        {
-            while (true)
-            {
-                if (my_serial.IsOpen && isCanRead)
-                {
-                    try
-                    {
+        public void Run() {
+            while (true) {
+                if (my_serial.IsOpen && isCanRead) {
+                    try {
                         btMsg = my_serial.ReadLine();
 
                         int handLeftX = (int)jointPoints[JointType.HandLeft].X;
                         int handLeftY = (int)jointPoints[JointType.HandLeft].Y;
                         int handRightX = (int)jointPoints[JointType.HandRight].X;
                         int handRightY = (int)jointPoints[JointType.HandRight].Y;
-                        double distance = Math.Sqrt(Math.Pow(handLeftX - handRightX, 2) + Math.Pow(handRightX - handRightY, 2));
+                        int SpineShoulderX = (int)jointPoints[JointType.SpineShoulder].X;
+                        int SpineShoulderY = (int)jointPoints[JointType.SpineShoulder].Y;
 
-                        if (Int32.Parse(btMsg) < border1) msg = "1";
-                        //else if (Int32.Parse(btMsg) < border2) msg = "2";
-                        else msg = "2";
+                        double handLeftToSpineShoulder = Math.Sqrt(Math.Pow(handLeftX - SpineShoulderX, 2) + Math.Pow(handLeftY - SpineShoulderY, 2));
+                        double handLeftToHandRight = Math.Sqrt(Math.Pow(handLeftX - handRightX, 2) + Math.Pow(handLeftY - handRightY, 2));
 
-                        sendMsg = msg != "" ? distance.ToString() + " : " + msg : distance.ToString();
+                        double ratio = (int)(handLeftToHandRight / handLeftToSpineShoulder * 1000) / 1000.0;
+
+                        if (Int32.Parse(btMsg) < 10) msg = "0";
+                        else msg = "1";
+
+                        sendMsg = msg != "" ? handLeftToHandRight.ToString() + " : " + msg + " : " + ratio.ToString() : handLeftToHandRight.ToString() + " : " + ratio.ToString();
                         listBox_recvdata.Dispatcher.BeginInvoke(new Action(Runnable));
                         isCanRead = false;
                     }
-                    catch
-                    {
+                    catch {
                         my_serial.Close();
                         t1.Abort();
                         cli.Close();
@@ -664,8 +610,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             }
         }
 
-        public void Runnable()
-        {
+        public void Runnable() {
             fsr_recvdata.Items.Insert(0, btMsg);
             listBox_recvdata.Items.Insert(0, sendMsg);
             //listBox_recvdata.SelectedIndex = listBox_recvdata.Items.Count - 1;
@@ -673,11 +618,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
             dgram = Encoding.UTF8.GetBytes(sendMsg);
             cli.Send(dgram, dgram.Length, ip, 8000);
-
         }
 
-        public void Error()
-        {
+        public void Error() {
             listBox_recvdata.Items.Clear();
             fsr_recvdata.Items.Clear();
 
@@ -686,11 +629,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             listBox_recvdata.Items.Insert(0, "Error");
             fsr_recvdata.Items.Insert(0, "Error");
         }
-         
-        private void onKeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.Key)
-            {
+
+        private void onKeyDown(object sender, KeyEventArgs e) {
+            switch (e.Key) {
                 case Key.Left:
                     bodyPos = bodyPos == 0 ? 6 : bodyPos - 1;
                     bodypos_print.Content = bodyPos.ToString();
@@ -699,14 +640,6 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     bodyPos = (bodyPos + 1) % 7;
                     bodypos_print.Content = bodyPos.ToString();
                     break;
-            }
-        }
-        private void button_change_Click(object sender, RoutedEventArgs e)
-        {
-            if (preinput_1.Text != "")
-            {
-                border1 = Int32.Parse(preinput_1.Text.ToString());
-                //border2 = Int32.Parse(preinput_2.Text.ToString());
             }
         }
     }
