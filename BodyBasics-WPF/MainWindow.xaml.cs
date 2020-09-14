@@ -34,6 +34,10 @@ namespace Microsoft.Samples.Kinect.BodyBasics {
         byte[] dgram;
         string ip, msg;
         int bodyPos;
+
+        // 활 상태 보내기용
+        int sendSerialMessageShootCount = 0;
+
         delegate void SetTextCallBack(string opt);
         /// <summary>
         /// Radius of drawn hand circles
@@ -585,11 +589,17 @@ namespace Microsoft.Samples.Kinect.BodyBasics {
                         double handLeftToHandRight = Math.Sqrt(Math.Pow(handLeftX - handRightX, 2) + Math.Pow(handLeftY - handRightY, 2));
 
                         double ratio = (int)(handLeftToHandRight / handLeftToSpineShoulder * 1000) / 1000.0;
+                
 
-                        if (Int32.Parse(btMsg) < 10) msg = "0";
-                        else msg = "1";
+                        if (msg.Equals("1") && Int32.Parse(btMsg) < 10 && ratio > 0.67) {
+                            msg = "2";
+                            sendSerialMessageShootCount = 5;
+                        } else if (Int32.Parse(btMsg) >= 10) msg = "1";
+                        else msg = "0";
 
-                        sendMsg = msg != "" ? handLeftToHandRight.ToString() + " : " + msg + " : " + ratio.ToString() : handLeftToHandRight.ToString() + " : " + ratio.ToString();
+                        if (sendSerialMessageShootCount > 0 && sendSerialMessageShootCount-- != 5) { }
+                        else sendMsg = msg + " : " + handLeftToHandRight.ToString() + " : " + ratio.ToString();
+                        
                         listBox_recvdata.Dispatcher.BeginInvoke(new Action(Runnable));
                         isCanRead = false;
                     }
