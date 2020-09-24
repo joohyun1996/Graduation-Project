@@ -588,13 +588,14 @@ namespace Microsoft.Samples.Kinect.BodyBasics {
                         double handLeftToSpineShoulder = Math.Sqrt(Math.Pow(handLeftX - SpineShoulderX, 2) + Math.Pow(handLeftY - SpineShoulderY, 2));
                         double handLeftToHandRight = Math.Sqrt(Math.Pow(handLeftX - handRightX, 2) + Math.Pow(handLeftY - handRightY, 2));
 
+                        handLeftToHandRight = (int)(handLeftToHandRight * 1000) / 1000.0;
                         double ratio = (int)(handLeftToHandRight / handLeftToSpineShoulder * 1000) / 1000.0;
                 
 
-                        if (msg.Equals("1") && Int32.Parse(btMsg) < 10 && ratio > 0.67) {
+                        if (msg.Equals("1") && Int32.Parse(btMsg) < 40 && ratio > 0.67) {
                             msg = "2";
                             sendSerialMessageShootCount = 5;
-                        } else if (Int32.Parse(btMsg) >= 10) msg = "1";
+                        } else if (Int32.Parse(btMsg) >= 40) msg = "1";
                         else msg = "0";
 
                         if (sendSerialMessageShootCount > 0 && sendSerialMessageShootCount-- != 5) { }
